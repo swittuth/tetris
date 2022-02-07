@@ -37,7 +37,8 @@ export function move_i_block(i_block) {
     let anim = setInterval(move, i_block.speed);
 
     function move() {
-        if (i_block.is_landed()){
+        if (i_block.is_fully_landed()){
+            console.log("Fully Landed");
             clearInterval(anim);
         }
         else{
