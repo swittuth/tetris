@@ -2,7 +2,7 @@ import * as board from "./board.js";
 
 // measure of pixels per square that constructs the block 
 const MEASUREMENT = 20;
-const DEAFAULT_SPEED = 350;
+const DEAFAULT_SPEED = 300;
 
 /*
 Shapes: 
@@ -32,11 +32,21 @@ export class Unit_Block {
             return false;
         }
     }
+
+    check_left_border() {
+        return (this.x_position === 0) ? true : false;
+    }
+
+    check_right_border() {
+        return (this.x_position === board.gameConsole.width - MEASUREMENT) ? true : false;
+    }
 };
 
 export class I_Block {
     constructor () {
         const start_x = this.randomize_start_position();
+        this.horizontal = true;
+        // speed used to indicate the inital freshing rate frame for the board
         this.speed = DEAFAULT_SPEED;
         this.first_block = new Unit_Block(start_x, 0);
         this.second_block = new Unit_Block(this.first_block.x_position + MEASUREMENT, 0);
@@ -73,28 +83,79 @@ export class I_Block {
     }
 
     move_left() {
-        this.first_block.x_position -= MEASUREMENT;
-        this.second_block.x_position -= MEASUREMENT;
-        this.third_block.x_position -= MEASUREMENT;
-        this.fourth_block.x_position -= MEASUREMENT;
+        if (!this.is_left_border()){
+            this.first_block.x_position -= MEASUREMENT;
+            this.second_block.x_position -= MEASUREMENT;
+            this.third_block.x_position -= MEASUREMENT;
+            this.fourth_block.x_position -= MEASUREMENT;
+        }
         this.render_on_screen();
     }
 
     move_right() {
-        this.first_block.x_position += MEASUREMENT;
-        this.second_block.x_position += MEASUREMENT;
-        this.third_block.x_position += MEASUREMENT;
-        this.fourth_block.x_position += MEASUREMENT;
+        if (!this.is_right_border()){
+            this.first_block.x_position += MEASUREMENT;
+            this.second_block.x_position += MEASUREMENT;
+            this.third_block.x_position += MEASUREMENT;
+            this.fourth_block.x_position += MEASUREMENT;
+        }
         this.render_on_screen();
     }
 
-    increase_speed() {
-        this.speed -= 30;
+    rotate() {
+       // rotate to the right basing off of the second block 
+       
+
+       if (this.horizontal){
+            // change position of first block
+            this.first_block.x_position = this.second_block.x_position;
+            this.first_block.y_position = this.second_block.y_position - MEASUREMENT;
+
+            // change position of third block
+            this.third_block.x_position = this.second_block.x_position;
+            this.third_block.y_position = this.second_block.y_position + MEASUREMENT;
+
+            // change position of fourth block based off of third block
+            this.fourth_block.x_position = this.second_block.x_position;
+            this.fourth_block.y_position = this.third_block.y_position + MEASUREMENT;
+       }
+       else{
+            if (this.is_right_border()){
+
+            }
+            else{
+                // change position of first block
+                this.first_block.x_position = this.second_block.x_position - MEASUREMENT;
+                this.first_block.y_position = this.second_block.y_position;
+
+                // change position of third block
+                this.third_block.x_position = this.second_block.x_position + MEASUREMENT;
+                this.third_block.y_position = this.second_block.y_position;
+
+                // change position of fourth block based off of third block
+                this.fourth_block.x_position = this.third_block.x_position + MEASUREMENT;
+                this.fourth_block.y_position = this.second_block.y_position;
+            }
+            
+       }
+
+        // indicate that it has already rotated
+        this.horizontal = !this.horizontal;
     }
 
-    landed() {
-        return this.block.some((block) => {
-            return block.check_landed();
-        });
+    increase_speed() {
+        this.move_down_one_row();
+    }
+
+    is_landed() {
+        return this.block.some(sub_block => sub_block.check_landed());
+    }
+
+    is_left_border() {
+        return this.block.some(sub_block => sub_block.check_left_border());
+    }
+
+    is_right_border() {
+        return this.block.some(sub_block => sub_block.check_right_border());
     }
 }
