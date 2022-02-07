@@ -1,0 +1,16 @@
+h1 {
+    text-align: center;
+
+}
+
+body {
+    margin: 0;
+}
+
+#gameConsole {
+    position: relative;
+    margin: 0 auto;
+    display: block;
+    border: 1px solid black;
+    background-color: white;
+}
