@@ -2,7 +2,7 @@ import * as board from "./board.js";
 
 // measure of pixels per square that constructs the block 
 const MEASUREMENT = 20;
-const DEAFAULT_SPEED = 200;
+const DEAFAULT_SPEED = 600;
 
 /*
 Shapes: 
@@ -91,14 +91,12 @@ export class I_Block {
 
     move_down_one_row() {
         if (!this.is_landed()){
-            console.log("moving down");
             this.first_block.y_position += MEASUREMENT;
             this.second_block.y_position += MEASUREMENT;
             this.third_block.y_position += MEASUREMENT;
             this.fourth_block.y_position += MEASUREMENT;
         }
         this.render_on_screen();
-        setInterval(() => this.moved = false, 5000);
     }
 
     move_left() {
@@ -127,10 +125,10 @@ export class I_Block {
 
     rotate() {       
        if (this.horizontal){
-            if (this.is_near_bottom_border()){
+            if (this.is_near_bottom_border() || this.is_landed()){
                 // all blocks' y positions are base on the 4th block 
                 // all blocks' x positions are base on the 2nd block
-                this.fourth_block.y_position = board.gameConsole.height - MEASUREMENT * 2;
+                this.fourth_block.y_position = board.gameConsole.height - MEASUREMENT;
                 this.fourth_block.x_position = this.second_block.x_position;
 
                 this.third_block.y_position = this.fourth_block.y_position - MEASUREMENT;
@@ -217,7 +215,11 @@ export class I_Block {
     }
 
     is_landed() {
-        return this.block.some(sub_block => sub_block.check_landed());
+        if (this.block.some(sub_block => sub_block.check_landed())){
+            setTimeout(() => this.moved = false, this.speed / 100);
+            return true;
+        }
+        return false;
     }
 
     is_fully_landed() {

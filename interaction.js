@@ -38,7 +38,6 @@ export function move_i_block() {
             clearInterval(anim);
         }
         else{
-            console.log("move down animated");
             board.gameCtx.clearRect(0, 0, board.gameConsole.width, board.gameConsole.height);
             blockRegistered.move_down_one_row();
         }
