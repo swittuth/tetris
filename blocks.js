@@ -2,7 +2,7 @@ import * as board from "./board.js";
 
 // measure of pixels per square that constructs the block 
 const MEASUREMENT = 20;
-const DEAFAULT_SPEED = 600;
+const DEAFAULT_SPEED = 200;
 
 /*
 Shapes: 
@@ -59,8 +59,8 @@ export class Unit_Block {
 export class I_Block {
     constructor () {
         const start_x = this.randomize_start_position();
-        this.moved = false;
         this.horizontal = true;
+        this.moved = true;
         // speed used to indicate the inital freshing rate frame for the board
         this.speed = DEAFAULT_SPEED;
         this.first_block = new Unit_Block(start_x, 0);
@@ -91,13 +91,14 @@ export class I_Block {
 
     move_down_one_row() {
         if (!this.is_landed()){
+            console.log("moving down");
             this.first_block.y_position += MEASUREMENT;
             this.second_block.y_position += MEASUREMENT;
             this.third_block.y_position += MEASUREMENT;
             this.fourth_block.y_position += MEASUREMENT;
-            this.render_on_screen();
         }
-        this.moved = false;
+        this.render_on_screen();
+        setInterval(() => this.moved = false, 5000);
     }
 
     move_left() {
@@ -206,23 +207,21 @@ export class I_Block {
 
         // indicate that it has already rotated
         this.horizontal = !this.horizontal;
+        this.moved = true;
 
-        // indicate that rotation was just made
-        this.moved = true
+        this.render_on_screen();
     }
 
     increase_speed() {
         this.move_down_one_row();
     }
 
-    is_fully_landed() {
-        return this.block.some(sub_block => sub_block.check_landed()) && !this.moved;
-        
-    }
-
     is_landed() {
         return this.block.some(sub_block => sub_block.check_landed());
-        
+    }
+
+    is_fully_landed() {
+        return this.block.some(sub_block => sub_block.check_landed) && !this.moved;
     }
 
     is_left_border() {
