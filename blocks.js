@@ -6,17 +6,27 @@ const DEAFAULT_SPEED = 600;
 
 /*
 Shapes: 
-+ I-block
++ I-block (done)
 + J-block
 + L-block
-+ O-block (square 2x2)
++ O-block (square 2x2) - in the process
 + S-block 
 + T-block 
 + Z-block
 */
 
+function randomize_starting_position() {
+    let random_position = Math.floor(Math.random() * (board.gameConsole.width / MEASUREMENT)) * MEASUREMENT;
 
-export class Unit_Block {
+    if (random_position > (board.gameConsole.width - (MEASUREMENT * 4))){
+        return random_position - (MEASUREMENT * 4);
+    }
+
+    return random_position;
+}
+
+
+class Unit_Block {
     constructor (x_position, y_position) {
         this.x_position = x_position;
         this.y_position = y_position;
@@ -56,28 +66,28 @@ export class Unit_Block {
 
 };
 
-export class I_Block {
+class Block {
     constructor () {
-        const start_x = this.randomize_start_position();
+        this.start_x = randomize_starting_position();
         this.horizontal = true;
+    }
+}
+
+export class O_Block {
+
+}
+
+export class I_Block extends Block{
+    constructor () {
+        super();
         this.moved = true;
         // speed used to indicate the inital freshing rate frame for the board
         this.speed = DEAFAULT_SPEED;
-        this.first_block = new Unit_Block(start_x, 0);
+        this.first_block = new Unit_Block(this.start_x, 0);
         this.second_block = new Unit_Block(this.first_block.x_position + MEASUREMENT, 0);
         this.third_block = new Unit_Block(this.second_block.x_position + MEASUREMENT, 0);
         this.fourth_block = new Unit_Block(this.third_block.x_position + MEASUREMENT, 0);
         this.block = [this.first_block, this.second_block, this.third_block, this.fourth_block];
-    }
-
-    randomize_start_position() {
-        let random_position = Math.floor(Math.random() * (board.gameConsole.width / MEASUREMENT)) * MEASUREMENT;
-
-        if (random_position > (board.gameConsole.width - (MEASUREMENT * 4))){
-            return random_position - (MEASUREMENT * 4);
-        }
-
-        return random_position;
     }
 
     render_on_screen() {
