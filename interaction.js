@@ -29,7 +29,7 @@ export function register_block(block){
     blockRegistered = block;
 }
 
-export function move_i_block() {
+export function move_block() {
 
     let anim = setInterval(move, blockRegistered.speed);
 
