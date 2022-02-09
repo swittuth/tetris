@@ -22,12 +22,14 @@ j_block.render_on_screen();
 action.move_block();
 */
 
+
 /*
 const l_block = new blocks.L_Block();
 action.register_block(l_block);
 l_block.render_on_screen();
 action.move_block();
 */
+
 
 /*
 const s_block = new blocks.S_Block();
@@ -43,7 +45,9 @@ z_block.render_on_screen();
 action.move_block();
 */
 
+/*
 const t_block = new blocks.T_Block();
 action.register_block(t_block);
 t_block.render_on_screen();
 action.move_block();
+*/
