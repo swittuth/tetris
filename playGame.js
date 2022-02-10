@@ -1,4 +1,3 @@
-import * as action from "./interaction.js";
 import * as blocks from "./blocks.js";
 import * as game_board from "./board.js";
 

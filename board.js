@@ -2,7 +2,6 @@ export let gameConsole = document.getElementById("gameConsole");
 export let gameCtx = gameConsole.getContext('2d');
 
 import * as block from "./blocks.js";
-import * as action from "./interaction.js";
 gameConsole.width = 300;
 gameConsole.height = 500; // indicate row
 
@@ -11,7 +10,7 @@ export class Game_Board {
     constructor() {
         this.number_of_row = gameConsole.height / block.MEASUREMENT;
         this.number_of_column = gameConsole.width / block.MEASUREMENT;
-        this.board_array = Array(25);
+        this.board_array = Array(this.number_of_row);
         this.NUM_BLOCK = 7; // use this to generate random number and then choose the specific block base on the number
         // this.blocks = [new block.I_Block(), new block.O_Block(), new block.T_Block(), 
         //     new block.Z_Block(), new block.S_Block(), new block.L_Block(), new block.J_Block()];
@@ -20,7 +19,7 @@ export class Game_Board {
         this.current_block = new block.I_Block();
         // instantiate the number of row in the array
         for (let i = 0; i < this.board_array.length; i++){
-            this.board_array[i] = Array(15);
+            this.board_array[i] = Array(this.number_of_column);
         }
     }
 
@@ -51,6 +50,9 @@ export class Game_Board {
                 this.current_block = new block.J_Block();
                 break;
         }
+    }
+
+    register_to_board() {
         
     }
 
@@ -91,6 +93,7 @@ export function play_game() {
             clearInterval(anim);
         }
         else if (game_board.current_block.is_landed()){
+
             game_board.generate_random_block();
         }
         else{
