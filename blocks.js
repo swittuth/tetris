@@ -130,7 +130,7 @@ class Block {
 
     is_landed() {
         if (this.block.some(sub_block => sub_block.check_landed())){
-            setTimeout(() => this.moved = false, this.speed / 100);
+            this.moved = false;
             return true;
         }
         return false;
@@ -182,7 +182,7 @@ export class O_Block extends Block{
 
 export class T_Block extends Block {
     constructor() {
-        super("lightgray", "charcoal");
+        super("lightgray", "gray");
         this.first_block = new Unit_Block(this.start_x, MEASUREMENT);
         this.second_block = new Unit_Block(this.first_block.x_position + MEASUREMENT, this.first_block.y_position);
         this.third_block = new Unit_Block(this.second_block.x_position + MEASUREMENT, this.first_block.y_position);
