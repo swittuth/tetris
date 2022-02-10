@@ -31,6 +31,7 @@ export function register_block(block){
 
 export function move_block() {
 
+    blockRegistered.render_on_screen();
     let anim = setInterval(move, blockRegistered.speed);
 
     function move() {
