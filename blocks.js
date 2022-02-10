@@ -1,26 +1,16 @@
 import * as board from "./board.js";
 
 // measure of pixels per square that constructs the block 
-export const MEASUREMENT = 20;
+const MEASUREMENT = 20;
 const DEAFAULT_SPEED = 600;
 
 // BUILDING BLOCKS FOR THE ACTUAL BLOCKS IN THE GAME
 
-// actually place the block in the middle of the screen
 function randomize_starting_position() {
-    // algo that randomize position of the block on the screen
-    /*
     let random_position = Math.floor(Math.random() * (board.gameConsole.width / MEASUREMENT)) * MEASUREMENT;
 
     if (random_position > (board.gameConsole.width - (MEASUREMENT * 4))){
         return random_position - (MEASUREMENT * 4);
-    }
-    */
-
-    // algo that place the block in the middle of the screen
-    let random_position = board.gameConsole.width / 2;
-    if (random_position % MEASUREMENT != 0){
-        random_position -= 10;
     }
 
     return random_position;
