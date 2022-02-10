@@ -53,7 +53,27 @@ export class Game_Board {
     }
 
     register_to_board() {
-        
+        const block_array = this.current_block.block; // get the array of blocks to register onto board
+        let index_x_position, index_y_position;
+        for (let unit of block_array){
+            index_x_position = unit.x_position / block.MEASUREMENT;
+            index_y_position = unit.y_position / block.MEASUREMENT;
+
+            this.board_array[index_y_position][index_x_position] = 1;
+        }
+    }
+
+    display_board() {
+        for (let index_y_position = 0; index_y_position < this.board_array.length; index_y_position++){
+            for (let index_x_position = 0; index_x_position < this.board_array[index_y_position].length; index_x_position++){
+                if (this.board_array[index_y_position][index_x_position] === 1){
+                    gameCtx.fillStyle = "black";
+                    gameCtx.strokeStyle = "blue";
+                    gameCtx.fillRect(index_x_position * block.MEASUREMENT, index_y_position * block.MEASUREMENT, block.MEASUREMENT, block.MEASUREMENT);
+                    gameCtx.strokeRect(index_x_position * block.MEASUREMENT, index_y_position * block.MEASUREMENT, block.MEASUREMENT, block.MEASUREMENT);
+                }
+            }
+        }
     }
 
 }
@@ -85,7 +105,7 @@ window.addEventListener("keypress", (event => {
 export function play_game() {
 
     //game_board.current_block.render_on_screen();
-    let anim = setInterval(move, 100);
+    let anim = setInterval(move, 300);
     game_board.current_block.render_on_screen();
 
     function move() {
@@ -93,12 +113,13 @@ export function play_game() {
             clearInterval(anim);
         }
         else if (game_board.current_block.is_landed()){
-
+            game_board.register_to_board();
             game_board.generate_random_block();
         }
         else{
             gameCtx.clearRect(0, 0, gameConsole.width, gameConsole.height);
             game_board.current_block.move_down_one_row();
         }
+        game_board.display_board();
     }
 }
