@@ -84,19 +84,15 @@ window.addEventListener("keypress", (event => {
     if (!game_board.current_block.is_landed()){
         switch (event.key){
             case 'a':
-                gameCtx.clearRect(0, 0, gameConsole.width, gameConsole.height);
                 game_board.current_block.move_left();   
                 break;
             case "d":
-                gameCtx.clearRect(0, 0, gameConsole.width, gameConsole.height);
                 game_board.current_block.move_right();
                 break;
             case 's':
-                gameCtx.clearRect(0, 0, gameConsole.width, gameConsole.height);
                 game_board.current_block.increase_speed();
                 break;
             case 'w':
-                gameCtx.clearRect(0, 0, gameConsole.width, gameConsole.height);
                 game_board.current_block.rotate();
                 break;
         }
@@ -106,7 +102,7 @@ export function play_game() {
 
     //game_board.current_block.render_on_screen();
     let anim = setInterval(move, 300);
-    game_board.current_block.render_on_screen();
+    game_board.register_to_board();
 
     function move() {
         if (game_board.end_game){
@@ -117,7 +113,9 @@ export function play_game() {
             game_board.generate_random_block();
         }
         else{
+            game_board.register_to_board();
             gameCtx.clearRect(0, 0, gameConsole.width, gameConsole.height);
+            // need to add clear trace to clear the path that the block dropping down is setting 
             game_board.current_block.move_down_one_row();
         }
         game_board.display_board();

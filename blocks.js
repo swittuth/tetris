@@ -91,7 +91,7 @@ class Block {
 
     rotate() {
         // doesn't do any rotation
-        this.render_on_screen();
+        //this.render_on_screen();
     }
 
     move_down_one_row() {
@@ -101,7 +101,7 @@ class Block {
             this.third_block.y_position += MEASUREMENT;
             this.fourth_block.y_position += MEASUREMENT;
         }
-        this.render_on_screen();
+        //this.render_on_screen();
     }
 
     move_left() {
@@ -113,7 +113,7 @@ class Block {
             this.fourth_block.x_position -= MEASUREMENT;
             this.moved = true;
         }
-        this.render_on_screen();
+        //this.render_on_screen();
     }
 
     move_right() {
@@ -125,7 +125,7 @@ class Block {
             this.fourth_block.x_position += MEASUREMENT;
             this.moved = true;
         }
-        this.render_on_screen();
+        //this.render_on_screen();
     }
 
     is_landed() {
@@ -276,7 +276,7 @@ export class T_Block extends Block {
         this.horizontal = !this.horizontal;
         this.moved = true;
  
-        this.render_on_screen();
+        //this.render_on_screen();
     }
 }
 
@@ -375,7 +375,7 @@ export class I_Block extends Block{
         this.horizontal = !this.horizontal;
         this.moved = true;
 
-        this.render_on_screen();
+        //this.render_on_screen();
     }
 }
 
@@ -429,7 +429,7 @@ export class Z_Block extends Block {
         this.horizontal = !this.horizontal;
         this.moved = true;
  
-        this.render_on_screen();
+        //this.render_on_screen();
     }
     
 }
@@ -491,7 +491,7 @@ export class S_Block extends Block {
         this.horizontal = !this.horizontal;
         this.moved = true;
  
-        this.render_on_screen();
+        //this.render_on_screen();
     }
 
 }
@@ -587,7 +587,7 @@ export class L_Block extends Block {
             }
         }
 
-        this.render_on_screen();
+        //this.render_on_screen();
         this.horizontal = !this.horizontal;
         this.moved = true;
     }
@@ -689,7 +689,7 @@ export class J_Block extends Block {
         }
 
 
-        this.render_on_screen();
+        //this.render_on_screen();
         this.moved = true;
 
         this.horizontal = !this.horizontal;
