@@ -65,26 +65,49 @@ export class Game_Board {
     }
 
     // update movement of the block to the block array
-    register_movement_board() {
+    register_movement_board() { // board has to double check whether block has landed to the board or has led to collision by reading the values from the array
         // loop through display board and then take off the current movement first and then update the movement
-        for (let index_y_position = 0; index_y_position < this.board_array.length; index_y_position++){
-            for (let index_x_position = 0; index_x_position < this.board_array[index_y_position].length; index_x_position++){
-                if (this.board_array[index_y_position][index_x_position] === 1){
-                    this.board_array[index_y_position][index_x_position] = 0;
+        
+        // READ COLLISION AND END OF BOARD HERE
+        if (this.check_valid_position()){
+            for (let index_y_position = 0; index_y_position < this.board_array.length; index_y_position++){
+                for (let index_x_position = 0; index_x_position < this.board_array[index_y_position].length; index_x_position++){
+                    if (this.board_array[index_y_position][index_x_position] === 1){
+                        this.board_array[index_y_position][index_x_position] = 0;
+                    }
+                }
+            }
+
+            const block_array = this.current_block.block; // get the array of blocks to register onto board
+            let index_x_position, index_y_position;
+            for (let unit of block_array){
+                index_x_position = unit.x_position / block.MEASUREMENT;
+                index_y_position = unit.y_position / block.MEASUREMENT;
+
+                this.board_array[index_y_position][index_x_position] = 1; // to indicate that the block is still in movement 
+            }
+        }
+
+        
+    }
+
+    check_valid_position() {
+        // read if next position being made is valid on board
+        // collision is made when block falling has a block underneath 
+        const block_array = this.current_block.block; 
+        let index_x_position, index_y_position; 
+        for (let unit of block_array){ // looping through each unit in the block array
+            index_x_position = unit.x_position / block.MEASUREMENT; // getting the index position of each block
+            index_y_position = unit.y_position / block.MEASUREMENT;
+            if (index_y_position + 1 < this.board_array.length){
+                if (this.board_array[index_y_position + 1][index_x_position] === 2){
+                    this.current_block.landed = true; // indicate that it has collided with another block on the board
+                    return false;
                 }
             }
         }
 
-        const block_array = this.current_block.block; // get the array of blocks to register onto board
-        let index_x_position, index_y_position;
-        for (let unit of block_array){
-            index_x_position = unit.x_position / block.MEASUREMENT;
-            index_y_position = unit.y_position / block.MEASUREMENT;
-
-            this.board_array[index_y_position][index_x_position] = 1; // to indicate that the block is set for permanent
-        }
-
-        
+        return true; 
     }
 
     display_board() {

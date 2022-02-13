@@ -77,7 +77,7 @@ class Block {
         this.speed = DEAFAULT_SPEED;
         this.fill_color = fill_color;
         this.stroke_color = stroke_color;
-    
+        this.landed = false;
     }
 
     render_on_screen() {
@@ -129,7 +129,7 @@ class Block {
     }
 
     is_landed() {
-        if (this.block.some(sub_block => sub_block.check_landed())){
+        if (this.block.some(sub_block => sub_block.check_landed() || this.landed)){
             this.moved = false;
             return true;
         }
@@ -272,11 +272,9 @@ export class T_Block extends Block {
             }
         }
  
-        // indicate that it has already rotated
         this.horizontal = !this.horizontal;
         this.moved = true;
  
-        //this.render_on_screen();
     }
 }
 
@@ -371,11 +369,9 @@ export class I_Block extends Block{
             
        }
 
-        // indicate that it has already rotated
         this.horizontal = !this.horizontal;
         this.moved = true;
 
-        //this.render_on_screen();
     }
 }
 
@@ -424,12 +420,9 @@ export class Z_Block extends Block {
             this.fourth_block.x_position = this.third_block.x_position + MEASUREMENT;
         }
 
-
-        // indicate that it has already rotated
         this.horizontal = !this.horizontal;
         this.moved = true;
  
-        //this.render_on_screen();
     }
     
 }
@@ -486,12 +479,8 @@ export class S_Block extends Block {
                 this.fourth_block.x_position = this.third_block.x_position + MEASUREMENT;
             }   
         }
-
-        // indicate that it has already rotated
         this.horizontal = !this.horizontal;
         this.moved = true;
- 
-        //this.render_on_screen();
     }
 
 }
@@ -691,7 +680,6 @@ export class J_Block extends Block {
 
         //this.render_on_screen();
         this.moved = true;
-
         this.horizontal = !this.horizontal;
     }
 }
