@@ -70,7 +70,7 @@ export class Game_Board {
         for (let index_y_position = 0; index_y_position < this.board_array.length; index_y_position++){
             for (let index_x_position = 0; index_x_position < this.board_array[index_y_position].length; index_x_position++){
                 if (this.board_array[index_y_position][index_x_position] === 1){
-                    gameCtx.clearRect(index_x_position * block.MEASUREMENT, index_y_position * block.MEASUREMENT, block.MEASUREMENT, block.MEASUREMENT);
+                    this.board_array[index_y_position][index_x_position] = 0;
                 }
             }
         }
@@ -95,6 +95,9 @@ export class Game_Board {
                     gameCtx.strokeStyle = "blue";
                     gameCtx.fillRect(index_x_position * block.MEASUREMENT, index_y_position * block.MEASUREMENT, block.MEASUREMENT, block.MEASUREMENT);
                     gameCtx.strokeRect(index_x_position * block.MEASUREMENT, index_y_position * block.MEASUREMENT, block.MEASUREMENT, block.MEASUREMENT);
+                }
+                else{
+                    gameCtx.clearRect(index_x_position * block.MEASUREMENT, index_y_position * block.MEASUREMENT, block.MEASUREMENT, block.MEASUREMENT);
                 }
             }
         }
@@ -122,27 +125,39 @@ window.addEventListener("keypress", (event => {
         }
     }
 }));
-export function play_game() {
 
-    //game_board.current_block.render_on_screen();
-    let anim = setInterval(move, 300);
+const timer = {
+    start: 0,
+    elapsed: 0, 
+    level: 100
+}
+
+export function play_game(now = 0) {
     game_board.register_movement_board(); 
 
-    function move() {
-        if (game_board.end_game){
-            clearInterval(anim);
-        }
-        else if (game_board.current_block.is_landed()){
-            game_board.register_block_to_board();
-            game_board.generate_random_block();
-        }
-        else{
+    //function move() {
+    if (game_board.end_game){
+        clearInterval(anim);
+    }
+    else if (game_board.current_block.is_landed()){
+        game_board.register_block_to_board();
+        game_board.generate_random_block();
+    }
+    else{
             
-            //gameCtx.clearRect(0, 0, gameConsole.width, gameConsole.height);
-            // need to add clear trace to clear the path that the block dropping down is setting
+        //gameCtx.clearRect(0, 0, gameConsole.width, gameConsole.height);
+        // need to add clear trace to clear the path that the block dropping down is setting
+        timer.elapsed = now - timer.start;
+
+        if (timer.elapsed > timer.level){
+            timer.start = now;
+
             game_board.register_movement_board(); 
             game_board.current_block.move_down_one_row();
         }
-        game_board.display_board();
     }
+    game_board.display_board();
+
+    requestAnimationFrame(play_game);
+    //}
 }
