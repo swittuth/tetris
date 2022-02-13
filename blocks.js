@@ -78,6 +78,12 @@ class Block {
         this.fill_color = fill_color;
         this.stroke_color = stroke_color;
         this.landed = false;
+        this.left_border = false;
+        this.right_border = false;
+
+        this.near_left_border = false;
+        this.near_right_border = false;
+        this.near_bottom_border = false;
     }
 
     render_on_screen() {
@@ -91,7 +97,6 @@ class Block {
 
     rotate() {
         // doesn't do any rotation
-        //this.render_on_screen();
     }
 
     move_down_one_row() {
@@ -101,7 +106,6 @@ class Block {
             this.third_block.y_position += MEASUREMENT;
             this.fourth_block.y_position += MEASUREMENT;
         }
-        //this.render_on_screen();
     }
 
     move_left() {
@@ -113,7 +117,6 @@ class Block {
             this.fourth_block.x_position -= MEASUREMENT;
             this.moved = true;
         }
-        //this.render_on_screen();
     }
 
     move_right() {
@@ -125,7 +128,6 @@ class Block {
             this.fourth_block.x_position += MEASUREMENT;
             this.moved = true;
         }
-        //this.render_on_screen();
     }
 
     is_landed() {
@@ -145,11 +147,11 @@ class Block {
     }
 
     is_left_border() {
-        return this.block.some(sub_block => sub_block.check_left_border());
+        return this.block.some(sub_block => sub_block.check_left_border() || this.left_border);
     }
 
     is_right_border() {
-        return this.block.some(sub_block => sub_block.check_right_border());
+        return this.block.some(sub_block => sub_block.check_right_border() || this.right_border);
     }
 
     is_bottom_border() {
@@ -157,15 +159,15 @@ class Block {
     }
 
     is_near_left_border() {
-        return this.block.some(sub_block => sub_block.check_near_left_border());
+        return this.block.some(sub_block => sub_block.check_near_left_border()) || this.near_left_border;
     }
 
     is_near_right_border() {
-        return this.block.some(sub_block => sub_block.check_near_right_border());
+        return this.block.some(sub_block => sub_block.check_near_right_border()) || this.near_right_border;
     }
 
     is_near_bottom_border() {
-        return this.block.some(sub_block => sub_block.check_near_bottom_border());
+        return this.block.some(sub_block => sub_block.check_near_bottom_border()) || this.near_bottom_border;
     }
 }
 
@@ -507,7 +509,6 @@ export class L_Block extends Block {
             }
             else{
                 // building off from block unit number 3
-                console.log("facing up");
                 this.third_block.x_position += MEASUREMENT;
                 this.third_block.y_position -= MEASUREMENT;
 
