@@ -1,5 +1,6 @@
-export let gameConsole = document.getElementById("gameConsole");
-export let gameCtx = gameConsole.getContext('2d');
+export const gameConsole = document.getElementById("gameConsole");
+export const gameCtx = gameConsole.getContext('2d');
+const body = document.getElementsByName("body");
 
 import * as block from "./blocks.js";
 gameConsole.width = 300;
@@ -19,6 +20,7 @@ export class Game_Board {
         this.current_block = new block.I_Block();
         this.current_fill = this.current_block.fill_color;
         this.current_stroke = this.current_block.stroke_color;
+        this.line_to_clear = [];
         // instantiate the number of row in the array
         for (let i = 0; i < this.board_array.length; i++){
             this.board_array[i] = Array(this.number_of_column);
@@ -84,12 +86,21 @@ export class Game_Board {
         const block_array = this.current_block.block; // get the array of blocks to register onto board
         let index_x_position, index_y_position;
         for (let unit of block_array){
-            index_x_position = unit.x_position / block.MEASUREMENT;
-            index_y_position = unit.y_position / block.MEASUREMENT;
+            try{
+                index_x_position = unit.x_position / block.MEASUREMENT;
+                index_y_position = unit.y_position / block.MEASUREMENT;
 
-            this.board_array[index_y_position][index_x_position].status = 2; // to indicate that the block is set for permanent
-            this.board_array[index_y_position][index_x_position].fill_color = this.current_block.fill_color;
-            this.board_array[index_y_position][index_x_position].stroke_color = this.current_block.stroke_color;
+                if (index_y_position < 0){
+                    this.end_game = true;
+                }
+
+                this.board_array[index_y_position][index_x_position].status = 2; // to indicate that the block is set for permanent
+                this.board_array[index_y_position][index_x_position].fill_color = this.current_block.fill_color;
+                this.board_array[index_y_position][index_x_position].stroke_color = this.current_block.stroke_color;
+            }
+            catch (error){
+                break;
+            }
         }
     }
 
@@ -113,10 +124,15 @@ export class Game_Board {
                 index_x_position = unit.x_position / block.MEASUREMENT;
                 index_y_position = unit.y_position / block.MEASUREMENT;
 
-                this.board_array[index_y_position][index_x_position].status = 1; // to indicate that the block is still in movement 
+                try{
+                    this.board_array[index_y_position][index_x_position].status = 1; // to indicate that the block is still in movement 
+                }
+                catch (error){
+                    break;
+                }
+                
             }
         }
-
         
     }
 
@@ -129,17 +145,24 @@ export class Game_Board {
             index_x_position = unit.x_position / block.MEASUREMENT; // getting the index position of each block
             index_y_position = unit.y_position / block.MEASUREMENT;
             // checking if collision is with the below block
-            if (index_y_position + 1 < this.board_array.length){
-                if (this.board_array[index_y_position + 1][index_x_position].status === 2){
-                    this.current_block.landed = true; // indicate that it has collided with another block on the board and set landed to true
-                    return false;
+            try{
+                if (index_y_position + 1 < this.board_array.length){
+                    if (this.board_array[index_y_position + 1][index_x_position].status === 2){
+                        this.current_block.landed = true; // indicate that it has collided with another block on the board and set landed to true
+                        return false;
+                    }
                 }
+            }
+            catch (error){
+                break;
             }
 
         }
 
         return true; 
     }
+
+    
 
     valid_turn() {
         const block_array = this.current_block.block; 
@@ -150,37 +173,41 @@ export class Game_Board {
 
             // check if side block is being collided
             // check for left side
-            if (index_x_position - 1 >= 0){
-                if (this.board_array[index_y_position][index_x_position - 1].status === 2){
-                    this.current_block.left_border = true;
-                    return false;
+            try{
+                if (index_x_position - 1 >= 0){
+                    if (this.board_array[index_y_position][index_x_position - 1].status === 2){
+                        this.current_block.left_border = true;
+                        return false;
+                    }
+                } // check if near left border
+                else if (index_x_position - 2 >= 0){
+                    if (this.board_array[index_y_position][index_x_position - 2].status === 2){
+                        this.current_block.near_left_border = true;
+                    }
+                    else{
+                        this.current_block.near_left_border = true;
+                    }
+                } 
+    
+                // check for right side
+                if (index_x_position + 1 < this.board_array[0].length){
+                    if (this.board_array[index_y_position][index_x_position + 1].status === 2){
+                        this.current_block.right_border = true;
+                        return false;
+                    }
                 }
-            } // check if near left border
-            else if (index_x_position - 2 >= 0){
-                if (this.board_array[index_y_position][index_x_position - 2].status === 2){
-                    this.current_block.near_left_border = true;
-                }
-                else{
-                    this.current_block.near_left_border = true;
-                }
-            } 
-
-            // check for right side
-            if (index_x_position + 1 < this.board_array[0].length){
-                if (this.board_array[index_y_position][index_x_position + 1].status === 2){
-                    this.current_block.right_border = true;
-                    return false;
+                else if (index_x_position + 2 < this.board_array[0].length){
+                    if (this.board_array[index_y_position][index_x_position + 2].status === 2){
+                        this.current_block.near_right_border = true;
+                    }
+                    else{
+                        this.current_block.near_right_border = true;
+                    }
                 }
             }
-            else if (index_x_position + 2 < this.board_array[0].length){
-                if (this.board_array[index_y_position][index_x_position + 2].status === 2){
-                    this.current_block.near_right_border = true;
-                }
-                else{
-                    this.current_block.near_right_border = true;
-                }
+            catch (error){
+                break;
             }
-
             
         }
 
@@ -204,15 +231,10 @@ export class Game_Board {
     }
 
     check_for_clear_lines() {
-        const lines_to_clear_array = [];
         for (let index_y_position = 0; index_y_position < this.board_array.length; index_y_position++){
             if (this.board_array[index_y_position].every(position => position.status === 2)){
-                lines_to_clear_array.push(index_y_position);
+                this.line_to_clear.push(index_y_position);
             }
-        }
-
-        if (lines_to_clear_array.length > 0){
-            this.clear_lines(lines_to_clear_array);
         }
     }
 
@@ -225,7 +247,6 @@ export class Game_Board {
 
         // shift all the higher row down 
         if (row_array.length === 1){
-            console.log(row_array[0]);
             for (let current_column = row_array[0] - 1; current_column >= 0; current_column -= 1){
                 for (let current_row_position = 0; current_row_position < this.board_array[current_column].length; current_row_position += 1){
                     if (this.board_array[current_column][current_row_position].status === 2){
@@ -254,7 +275,7 @@ export class Game_Board {
 
         }
 
-        
+        this.line_to_clear = [];
     }
 
 
@@ -285,35 +306,45 @@ window.addEventListener("keypress", (event => {
     }
 }));
 
+
 const timer = {
     start: 0,
     elapsed: 0, 
-    level: 200
+    level: game_board.current_block.speed
 }
 
 export function play_game(now = 0) {
     game_board.register_movement_board(); 
-    
+    const raf = requestAnimationFrame(play_game);
     //function move() {
     if (game_board.end_game){
-        clearInterval(anim);
+        cancelAnimationFrame(raf);
+        window.alert("Game Over");
     }
     else if (game_board.current_block.is_landed()){
+
+        timer.elapsed = now - timer.start;
         game_board.register_block_to_board();
         game_board.generate_random_block();
         game_board.check_for_clear_lines();
     }
+    else if (game_board.line_to_clear.length > 0){
+        game_board.display_board();
+
+        timer.elapsed = now - timer.start;
+        
+        if (timer.elapsed > 300){
+            game_board.clear_lines(game_board.line_to_clear)
+        };
+    }
     else{
         timer.elapsed = now - timer.start;
-
+        game_board.display_board();
         if (timer.elapsed > timer.level){
             timer.start = now;
-
+            //timer.level = game_board.current_block.speed;
             game_board.register_movement_board(); 
             game_board.current_block.move_down_one_row();
         }
     }
-    game_board.display_board();
-
-    requestAnimationFrame(play_game);
 }

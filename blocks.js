@@ -72,6 +72,7 @@ class Unit_Block {
 class Block {
     constructor (fill_color, stroke_color) {
         this.start_x = randomize_starting_position();
+        this.start_y = -20;
         this.horizontal = true;
         this.moved = true;
         this.speed = DEAFAULT_SPEED;
@@ -174,8 +175,8 @@ class Block {
 export class O_Block extends Block{
     constructor () {
         super("aqua", "blue");
-        this.first_block = new Unit_Block(this.start_x, 0);
-        this.second_block = new Unit_Block(this.first_block.x_position + MEASUREMENT, 0);
+        this.first_block = new Unit_Block(this.start_x, this.start_y);
+        this.second_block = new Unit_Block(this.first_block.x_position + MEASUREMENT, this.start_y);
         this.third_block = new Unit_Block(this.first_block.x_position, this.second_block.y_position + MEASUREMENT);
         this.fourth_block = new Unit_Block(this.third_block.x_position + MEASUREMENT, this.third_block.y_position);
         this.block = [this.first_block, this.second_block, this.third_block, this.fourth_block];
@@ -185,7 +186,7 @@ export class O_Block extends Block{
 export class T_Block extends Block {
     constructor() {
         super("lightgray", "gray");
-        this.first_block = new Unit_Block(this.start_x, MEASUREMENT);
+        this.first_block = new Unit_Block(this.start_x, this.start_y);
         this.second_block = new Unit_Block(this.first_block.x_position + MEASUREMENT, this.first_block.y_position);
         this.third_block = new Unit_Block(this.second_block.x_position + MEASUREMENT, this.first_block.y_position);
         this.fourth_block = new Unit_Block(this.second_block.x_position, this.second_block.y_position - MEASUREMENT);
@@ -284,10 +285,10 @@ export class I_Block extends Block{
     constructor () {
         super("coral", "red");
         // speed used to indicate the inital freshing rate frame for the board
-        this.first_block = new Unit_Block(this.start_x, 0);
-        this.second_block = new Unit_Block(this.first_block.x_position + MEASUREMENT, 0);
-        this.third_block = new Unit_Block(this.second_block.x_position + MEASUREMENT, 0);
-        this.fourth_block = new Unit_Block(this.third_block.x_position + MEASUREMENT, 0);
+        this.first_block = new Unit_Block(this.start_x, this.start_y);
+        this.second_block = new Unit_Block(this.first_block.x_position + MEASUREMENT, this.start_y);
+        this.third_block = new Unit_Block(this.second_block.x_position + MEASUREMENT, this.start_y);
+        this.fourth_block = new Unit_Block(this.third_block.x_position + MEASUREMENT, this.start_y);
         this.block = [this.first_block, this.second_block, this.third_block, this.fourth_block];
     }
 
@@ -380,7 +381,7 @@ export class I_Block extends Block{
 export class Z_Block extends Block {
     constructor() {
         super("lightpink", "deeppink");
-        this.first_block = new Unit_Block(this.start_x, 0);
+        this.first_block = new Unit_Block(this.start_x, this.start_y);
         this.second_block = new Unit_Block(this.first_block.x_position + MEASUREMENT, this.first_block.y_position);
         this.third_block = new Unit_Block(this.second_block.x_position, this.first_block.y_position + MEASUREMENT);
         this.fourth_block = new Unit_Block(this.third_block.x_position + MEASUREMENT, this.third_block.y_position);
@@ -490,7 +491,7 @@ export class S_Block extends Block {
 export class L_Block extends Block {
     constructor() {
         super("yellow", "orange");
-        this.first_block = new Unit_Block(this.start_x, 0);
+        this.first_block = new Unit_Block(this.start_x, this.start_y);
         this.second_block = new Unit_Block(this.first_block.x_position, this.first_block.y_position + MEASUREMENT);
         this.third_block = new Unit_Block(this.first_block.x_position + MEASUREMENT, this.first_block.y_position);
         this.fourth_block = new Unit_Block(this.third_block.x_position + MEASUREMENT, this.first_block.y_position);
@@ -586,7 +587,7 @@ export class L_Block extends Block {
 export class J_Block extends Block {
     constructor() {
         super("violet", "purple");
-        this.first_block = new Unit_Block(this.start_x, 0);
+        this.first_block = new Unit_Block(this.start_x, this.start_y);
         this.second_block = new Unit_Block(this.first_block.x_position, this.first_block.y_position + MEASUREMENT);
         this.third_block = new Unit_Block(this.second_block.x_position + MEASUREMENT, this.second_block.y_position);
         this.fourth_block = new Unit_Block(this.third_block.x_position + MEASUREMENT, this.second_block.y_position);
@@ -625,7 +626,7 @@ export class J_Block extends Block {
             if (this.facing_up){
                 if (this.is_left_border()){
                     // if so then rotate base on the fourth block
-                    this.fourth_block.x_position = 0;
+                    this.fourth_block.x_position = this.start_y;
                     this.fourth_block.y_position += MEASUREMENT;
 
                     this.third_block.x_position = this.fourth_block.x_position + MEASUREMENT;
