@@ -13,24 +13,29 @@ body {
     right: 0;
     margin-left: auto;
     margin-right: auto;
-
-    border: 1px solid coral;
 }
 
 #gameConsole {
     position: relative;
     margin: 0 auto;
     display: block;
-    border: 1px solid black;
+    border: 2px solid grey;
     background-color: white;
 }
 
 #nextBlockConsole {
     position: relative;
     left: 700px;
-    bottom: 502px;
-    width: 100px;
-    height: 100px;
-    border: 1px solid black;
+    bottom: 520px;
+    border: 2px solid grey;
     background-color: white;
+}
+
+#score {
+    position: relative;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 15px;
+    font-weight: bolder;
+    left: 700px;
+    bottom: 520px;
 }
