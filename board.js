@@ -8,8 +8,8 @@ import * as block from "./blocks.js";
 gameConsole.width = 300;
 gameConsole.height = 500; // indicate row
 
-nextBlockConsole.width = 120;
-nextBlockConsole.height = 120;
+nextBlockConsole.width = 140;
+nextBlockConsole.height = 140;
 
 // the board will command when the blocks are randomly generated
 export class Game_Board {
@@ -44,6 +44,7 @@ export class Game_Board {
     register_block_to_board() {
         const block_array = this.current_block.block; // get the array of blocks to register onto board
         let index_x_position, index_y_position;
+        this.display_board();
         for (let unit of block_array){
             try{
                 index_x_position = unit.x_position / block.MEASUREMENT;
