@@ -111,6 +111,15 @@ export class Game_Board {
         
     }
 
+    drop_block() {
+        while (!this.current_block.is_landed()){
+            if (this.check_valid_position()){
+                this.current_block.move_down_one_row();
+                this.score += 5;
+            }
+        }
+    }
+
     check_valid_position() {
         // read if next position being made is valid on board
         // collision is made when block falling has a block underneath 
@@ -466,7 +475,10 @@ document.addEventListener("keydown", (event => {
         else if (event.keyCode === 38 || event.keyCode === 87){
             game_board.current_block.rotate();
         }
-        else if (event.keyCode){
+        else if (event.keyCode === 32){
+            game_board.drop_block();
+        }
+        else if (event.keyCode === 80){
             game_board.is_paused = !game_board.is_paused;
         }
 
@@ -484,7 +496,7 @@ export function play_game(now = 0) {
     game_board.register_movement_board(); 
     game_board.register_next_block_to_canvas();
     const raf = requestAnimationFrame(play_game);
-    
+
     if (game_board.end_game){
         cancelAnimationFrame(raf);
         window.alert("Game Over");
