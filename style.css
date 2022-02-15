@@ -8,6 +8,10 @@ body {
     margin: 0;
 }
 
+canvas {
+    display: inline-block;
+}
+
 #gameContainer {
     position: absolute;
     left: 0;
@@ -24,19 +28,23 @@ body {
     background-color: white;
 }
 
+#infoContainer {
+    position: absolute;
+    right: 32.5%;
+
+}
+
 #nextBlockConsole {
     position: relative;
-    left: 700px;
-    bottom: 520px;
+    margin: 0 auto;
     border: 2px solid grey;
     background-color: white;
 }
 
 #score {
     position: relative;
+    margin: 0 auto;
     font-family: 'Courier New', Courier, monospace;
     font-size: 15px;
     font-weight: bolder;
-    left: 700px;
-    bottom: 520px;
 }

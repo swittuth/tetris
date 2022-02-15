@@ -21,6 +21,19 @@ nextBlockConsole.height = 80;
 // the board will command when the blocks are randomly generated
 export class Game_Board {
     constructor() {
+
+        // for the next block canvas
+        this.num_row_next = nextBlockConsole.height / block.MEASUREMENT;
+        this.num_column_next = nextBlockConsole.width / block.MEASUREMENT;
+
+        this.next_block_array;
+        this.upcoming_block = new block.I_Block();
+        this.upcoming_fill;
+        this.upcoming_stoke;
+        this.generate_random_upcoming_block();
+        this.initiate_next_block_array();
+
+
         this.score = 0;
         this.number_of_row = gameConsole.height / block.MEASUREMENT;
         this.number_of_column = gameConsole.width / block.MEASUREMENT;
@@ -31,20 +44,8 @@ export class Game_Board {
         this.current_fill;
         this.current_stroke;
         this.line_to_clear = [];
-        this.generate_random_block();
+        this.update_current_block();
         this.initiate_board_array();
-
-
-        // for the next block canvas
-        this.num_row_next = nextBlockConsole.height / block.MEASUREMENT;
-        this.num_column_next = nextBlockConsole.width / block.MEASUREMENT;
-
-        this.next_block_array;
-        this.upcoming_block;
-        this.upcoming_fill;
-        this.upcoming_stoke;
-        this.generate_random_upcoming_block();
-        this.initiate_next_block_array();
         
     }
 
@@ -94,6 +95,8 @@ export class Game_Board {
 
                 try{
                     this.board_array[index_y_position][index_x_position].status = 1; // to indicate that the block is still in movement 
+                    this.board_array[index_y_position][index_x_position].fill_color = this.current_block.fill_color;
+                    this.board_array[index_y_position][index_x_position].stroke_color = this.current_block.stroke_color;
                 }
                 catch (error){
                     break;
@@ -207,6 +210,15 @@ export class Game_Board {
         }
     }
 
+    animate_line(row_array) {
+        const random_color = ["gold", "yellowgreen", "aqua", "coral", "lightpink", "lightgreen", "yellow", "violet"];
+
+        row_array.forEach(row => this.board_array[row].forEach(element => {
+            element.fill_color = random_color[Math.ceil(Math.random() * random_color.length)];
+            element.stroke_color = random_color[Math.ceil(Math.random() * random_color.length)];
+        }));
+    }
+
     // detect if line is cleared then clear the entire rows and shift the rest down
     clear_lines(row_array) {
         // if want can add animation before hand for all of the blocks to keep changing color and then fade away
@@ -236,6 +248,8 @@ export class Game_Board {
                     if (this.board_array[current_column][current_row_position].status === 2){
                         this.board_array[current_column][current_row_position].status = 0;
                         this.board_array[current_column + shifted_lines][current_row_position].status = 2
+                        this.board_array[current_column + shifted_lines][current_row_position].fill_color = this.board_array[current_column][current_row_position].fill_color;
+                        this.board_array[current_column + shifted_lines][current_row_position].stroke_color = this.board_array[current_column][current_row_position].stroke_color;
                     }
                 }
             }
@@ -257,67 +271,16 @@ export class Game_Board {
             for(let column = 0; column < this.board_array[row].length; column++){
                 this.board_array[row][column] = {
                     status: 0,
-                    fill_color: this.current_block.fill_color,
-                    stroke_color: this.current_block.stroke_color,
+                    fill_color: "white",
+                    stroke_color: "white",
                 }
             }
-        }
-
-    }
-
-    update_paint() {
-        for (let row = 0; row < this.board_array.length; row++){
-            for(let column = 0; column < this.board_array[row].length; column++){
-                // if the area is not locked then use a different paint color to update the canvas
-                if (this.board_array[row][column].status !== 2){
-                    this.board_array[row][column].fill_color = this.current_block.fill_color;
-                    this.board_array[row][column].stroke_color = this.current_block.stroke_color;
-                }
-            }
-        }
-    }
-
-    generate_random_block() {
-        this.on_board = true;
-        const chosen_block = Math.floor(Math.random() * this.NUM_BLOCK);
-
-        if (chosen_block === 0){
-            this.current_block = new block.I_Block();
-        }
-        else if (chosen_block === 1){
-            this.current_block = new block.O_Block();
-        }
-        else if (chosen_block === 2){
-            this.current_block = new block.T_Block();
-        }
-        else if (chosen_block === 3){
-            this.current_block = new block.Z_Block();
-        }
-        else if (chosen_block === 4){
-            this.current_block = new block.S_Block();
-        }
-        else if (chosen_block === 5){
-            this.current_block = new block.L_Block();
-        }
-        else if (chosen_block === 6){
-            this.current_block = new block.J_Block();
-        }
-
-        this.current_fill = this.current_block.fill_color;
-        this.current_stroke = this.current_block.stroke_color;
-
-        try{
-            this.update_paint();
-        }
-        catch (error){ // to account for the first case when the block is first initialized
-            return;
         }
 
     }
 
     update_current_block() {
         this.current_block = this.upcoming_block;
-        this.update_paint();
         this.generate_random_upcoming_block();
     }
 
@@ -350,14 +313,14 @@ export class Game_Board {
         this.upcoming_stroke = this.upcoming_block.stroke_color;
 
         try{
-            this.update_next_paint();
+            this.update_next_block_canvas();
         }
         catch (error){
             return;
         }
     }
 
-    update_next_paint() {
+    update_next_block_canvas() {
         for (let row = 0; row < this.next_block_array.length; row++){
             for(let column = 0; column < this.next_block_array[row].length; column++){
                 // if the area is not locked then use a different paint color to update the canvas
@@ -389,8 +352,8 @@ export class Game_Board {
             for (let column = 0; column < this.next_block_array[row].length; column++){
                 this.next_block_array[row][column] = {
                     status: 0,
-                    fill_color: this.upcoming_block.fill_color,
-                    stroke_color: this.upcoming_block.stroke_color
+                    fill_color: "white",
+                    stroke_color: "white"
                 }
             }
         }
@@ -478,27 +441,28 @@ export class Game_Board {
 
 const game_board = new Game_Board()
 
-window.addEventListener("keypress", (event => {
+document.addEventListener("keydown", (event => {
     if (!game_board.current_block.is_landed()){
-        switch (event.key){
-            case 'a':
-                if (game_board.valid_turn()){
-                    game_board.current_block.move_left(); 
-                }  
-                break;
-            case "d":
-                if (game_board.valid_turn()){
-                    game_board.current_block.move_right();
-                }
-                break;
-            case 's':
-                game_board.current_block.increase_speed();
-                game_board.score += 5;
-                break;
-            case 'w':
-                game_board.current_block.rotate();
-                break;
+        event.preventDefault();
+
+        if (event.keyCode === 37 || event.keyCode === 65){
+            if (game_board.valid_turn()){
+                game_board.current_block.move_left(); 
+            }
         }
+        else if (event.keyCode === 39 || event.keyCode === 68){
+            if (game_board.valid_turn()){
+                game_board.current_block.move_right();
+            }
+        }
+        else if (event.keyCode === 40 || event.keyCode === 83){
+            game_board.current_block.increase_speed();
+            game_board.score += 5;
+        }
+        else if (event.keyCode === 38 || event.keyCode === 87){
+            game_board.current_block.rotate();
+        }
+
     }
 }));
 
@@ -528,12 +492,15 @@ export function play_game(now = 0) {
         game_board.register_next_block_to_canvas();
     }
     else if (game_board.line_to_clear.length > 0){
+        // include a function to animate block by changing the color of the block 
+        game_board.animate_line(game_board.line_to_clear);
+
         game_board.display_next_canvas();
         game_board.display_board();
 
         timer.elapsed = now - timer.start;
         
-        if (timer.elapsed > 300){
+        if (timer.elapsed > 500){
             game_board.clear_lines(game_board.line_to_clear)
         };
     }
