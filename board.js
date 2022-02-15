@@ -46,6 +46,8 @@ export class Game_Board {
         this.line_to_clear = [];
         this.update_current_block();
         this.initiate_board_array();
+
+        this.is_paused = false;
         
     }
 
@@ -462,6 +464,9 @@ document.addEventListener("keydown", (event => {
         else if (event.keyCode === 38 || event.keyCode === 87){
             game_board.current_block.rotate();
         }
+        else if (event.keyCode){
+            game_board.is_paused = !game_board.is_paused;
+        }
 
     }
 }));
@@ -481,6 +486,9 @@ export function play_game(now = 0) {
     if (game_board.end_game){
         cancelAnimationFrame(raf);
         window.alert("Game Over");
+    }
+    else if (game_board.is_paused){
+        // do nothing 
     }
     else if (game_board.current_block.is_landed()){
 
