@@ -2,7 +2,7 @@ import * as board from "./board.js";
 
 // measure of pixels per square that constructs the block 
 export const MEASUREMENT = 20;
-const DEAFAULT_SPEED = 600;
+const DEAFAULT_SPEED = 400;
 
 // BUILDING BLOCKS FOR THE ACTUAL BLOCKS IN THE GAME
 

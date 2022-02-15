@@ -4,6 +4,13 @@ export const gameCtx = gameConsole.getContext('2d');
 const nextBlockConsole = document.getElementById("nextBlockConsole");
 const nextBlockCtx = nextBlockConsole.getContext('2d');
 
+const scoreElement = document.getElementById("score");
+
+const ONE_LINE_POINT = 150;
+const TWO_LINE_POINT = 370;
+const THREE_LINE_POINT = 780;
+const TETRIS = 1500;
+
 import * as block from "./blocks.js";
 gameConsole.width = 300;
 gameConsole.height = 500; // indicate row
@@ -14,6 +21,7 @@ nextBlockConsole.height = 80;
 // the board will command when the blocks are randomly generated
 export class Game_Board {
     constructor() {
+        this.score = 0;
         this.number_of_row = gameConsole.height / block.MEASUREMENT;
         this.number_of_column = gameConsole.width / block.MEASUREMENT;
         this.current_block;
@@ -175,6 +183,7 @@ export class Game_Board {
     }
 
     display_board() {
+        scoreElement.innerHTML = `Score: ${this.score}`;
         for (let index_y_position = 0; index_y_position < this.board_array.length; index_y_position++){
             for (let index_x_position = 0; index_x_position < this.board_array[index_y_position].length; index_x_position++){
                 if (this.board_array[index_y_position][index_x_position].status === 2 || this.board_array[index_y_position][index_x_position].status === 1){
@@ -205,23 +214,22 @@ export class Game_Board {
         // change all of the values in that current row to 0 
         row_array.forEach(row => this.board_array[row].forEach(element => element.status = 0));
 
-        // shift all the higher row down 
         if (row_array.length === 1){
-            for (let current_column = row_array[0] - 1; current_column >= 0; current_column -= 1){
-                for (let current_row_position = 0; current_row_position < this.board_array[current_column].length; current_row_position += 1){
-                    if (this.board_array[current_column][current_row_position].status === 2){
-                        this.board_array[current_column][current_row_position].status = 0;
-                        this.board_array[current_column + 1][current_row_position].status = 2
-                    }
-                }
-            }
+            this.score += ONE_LINE_POINT;
         }
-        else{ // when more than one row cleared
-            // determine which row to start shifting down
-            // last element of the row_array is the last line to be cleared
-            // the first element of the row_array is the first element to be cleared
-            // number of position to be shifted down is last_element - first_element
-            // row to be shifted down starts from row before the first element
+        else if (row_array.length === 2){
+            this.score += TWO_LINE_POINT;
+        }
+        else if (row_array.length === 3){
+            this.score += THREE_LINE_POINT;
+        }
+        else if (row_array.length === 4){
+            this.score += TETRIS;
+        }
+
+        // shift all the higher row down 
+        if (row_array.length >= 1){
+            
             const shifted_lines = row_array[row_array.length - 1] - row_array[0] + 1;
             for (let current_column = row_array[0]; current_column >= 0; current_column -= 1){
                 for (let current_row_position = 0; current_row_position < this.board_array[current_column].length; current_row_position += 1){
@@ -485,6 +493,7 @@ window.addEventListener("keypress", (event => {
                 break;
             case 's':
                 game_board.current_block.increase_speed();
+                game_board.score += 5;
                 break;
             case 'w':
                 game_board.current_block.rotate();
