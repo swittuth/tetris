@@ -8,8 +8,8 @@ import * as block from "./blocks.js";
 gameConsole.width = 300;
 gameConsole.height = 500; // indicate row
 
-nextBlockConsole.width = 140;
-nextBlockConsole.height = 140;
+nextBlockConsole.width = 100;
+nextBlockConsole.height = 80;
 
 // the board will command when the blocks are randomly generated
 export class Game_Board {
@@ -223,7 +223,6 @@ export class Game_Board {
             // number of position to be shifted down is last_element - first_element
             // row to be shifted down starts from row before the first element
             const shifted_lines = row_array[row_array.length - 1] - row_array[0] + 1;
-            console.log(shifted_lines);
             for (let current_column = row_array[0]; current_column >= 0; current_column -= 1){
                 for (let current_row_position = 0; current_row_position < this.board_array[current_column].length; current_row_position += 1){
                     if (this.board_array[current_column][current_row_position].status === 2){
@@ -392,43 +391,82 @@ export class Game_Board {
     }
 
     register_next_block_to_canvas() {
-        const block_array = this.upcoming_block.block; // get the array of blocks to register onto board
-        let index_x_position, index_y_position;
-        for (let unit of block_array){
-            try{
-                // need an algorithm to convert from middle of the original canvas to the next block canvas
-                index_x_position = Math.floor((unit.x_position - ((gameConsole.width - nextBlockConsole.width) / 2)) / block.MEASUREMENT);
-                index_y_position = Math.floor((unit.y_position + block.MEASUREMENT * 2) / block.MEASUREMENT);
-                
-
-                this.next_block_array[index_y_position][index_x_position].status = 2; // to indicate that the block is set for permanent
-                this.next_block_array[index_y_position][index_x_position].fill_color = this.upcoming_block.fill_color;
-                this.next_block_array[index_y_position][index_x_position].stroke_color = this.upcoming_block.stroke_color;
-            }
-            catch (error){
-                break;
-            }
+        // detect what is the next block and register it accordingly
+        if (this.upcoming_block.constructor.name === "S_Block"){
+            this.next_block_array[2][1].status = 2;
+            this.next_block_array[2][2].status = 2;
+            this.next_block_array[1][2].status = 2;
+            this.next_block_array[1][3].status = 2;
         }
+        else if (this.upcoming_block.constructor.name === "T_Block"){
+            this.next_block_array[2][1].status = 2;
+            this.next_block_array[2][2].status = 2;
+            this.next_block_array[2][3].status = 2;
+            this.next_block_array[1][2].status = 2;
+        }
+        else if (this.upcoming_block.constructor.name === "Z_Block"){
+            this.next_block_array[1][1].status = 2;
+            this.next_block_array[1][2].status = 2;
+            this.next_block_array[2][2].status = 2;
+            this.next_block_array[2][3].status = 2;
+        }
+        else if (this.upcoming_block.constructor.name === "I_Block"){
+            this.next_block_array[1][0].status = 2;
+            this.next_block_array[1][1].status = 2;
+            this.next_block_array[1][2].status = 2;
+            this.next_block_array[1][3].status = 2;
+        }
+        else if (this.upcoming_block.constructor.name === "O_Block"){
+            this.next_block_array[1][1].status = 2;
+            this.next_block_array[1][2].status = 2;
+            this.next_block_array[2][1].status = 2;
+            this.next_block_array[2][2].status = 2;
+        }
+        else if (this.upcoming_block.constructor.name === "J_Block"){
+            this.next_block_array[1][1].status = 2;
+            this.next_block_array[2][1].status = 2;
+            this.next_block_array[2][2].status = 2;
+            this.next_block_array[2][3].status = 2;
+        }
+        else if (this.upcoming_block.constructor.name === "L_Block"){
+            this.next_block_array[2][1].status = 2;
+            this.next_block_array[2][2].status = 2;
+            this.next_block_array[2][3].status = 2;
+            this.next_block_array[1][3].status = 2;
+        }
+
+
     }
 
     display_next_canvas() {
         for (let index_y_position = 0; index_y_position < this.next_block_array.length; index_y_position++){
             for (let index_x_position = 0; index_x_position < this.next_block_array[index_y_position].length; index_x_position++){
+
+                let offset_y = 0;
+                let offset_x = 0;
+
+                if (this.upcoming_block.constructor.name === "I_Block"){
+                    offset_y += 10;
+                    offset_x += 10;
+                }
+                else if (this.upcoming_block.constructor.name === "O_Block"){
+                    offset_x += 10;
+                }
+
                 if (this.next_block_array[index_y_position][index_x_position].status === 2){
                     nextBlockCtx.fillStyle = this.next_block_array[index_y_position][index_x_position].fill_color;
                     nextBlockCtx.strokeStyle = this.next_block_array[index_y_position][index_x_position].stroke_color;
-                    nextBlockCtx.fillRect(index_x_position * block.MEASUREMENT, index_y_position * block.MEASUREMENT, block.MEASUREMENT, block.MEASUREMENT);
-                    nextBlockCtx.strokeRect(index_x_position * block.MEASUREMENT, index_y_position * block.MEASUREMENT, block.MEASUREMENT, block.MEASUREMENT);
+                    nextBlockCtx.fillRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
+                    nextBlockCtx.strokeRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
                 }
                 else{
-                    nextBlockCtx.clearRect(index_x_position * block.MEASUREMENT, index_y_position * block.MEASUREMENT, block.MEASUREMENT, block.MEASUREMENT);
+                    nextBlockCtx.clearRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + + offset_y, block.MEASUREMENT, block.MEASUREMENT);
                 }
             }
         }
     }
-
-
 }
+
 
 const game_board = new Game_Board()
 
