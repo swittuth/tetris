@@ -5,6 +5,8 @@ const nextBlockConsole = document.getElementById("nextBlockConsole");
 const nextBlockCtx = nextBlockConsole.getContext('2d');
 
 const scoreElement = document.getElementById("score");
+let gameStatus = document.getElementById("gameStatus");
+gameStatus.style.display = "none";
 
 const ONE_LINE_POINT = 150;
 const TWO_LINE_POINT = 370;
@@ -482,12 +484,13 @@ export function play_game(now = 0) {
     game_board.register_movement_board(); 
     game_board.register_next_block_to_canvas();
     const raf = requestAnimationFrame(play_game);
-    //function move() {
+    
     if (game_board.end_game){
         cancelAnimationFrame(raf);
         window.alert("Game Over");
     }
     else if (game_board.is_paused){
+        gameStatus.style.display = "block";
         // do nothing 
     }
     else if (game_board.current_block.is_landed()){
@@ -513,6 +516,7 @@ export function play_game(now = 0) {
         };
     }
     else{
+        gameStatus.style.display = "none";
         timer.elapsed = now - timer.start;
         game_board.display_board();
         game_board.display_next_canvas();

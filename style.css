@@ -4,6 +4,12 @@ h1 {
     font-size: 50px;
 }
 
+#gameStatus {
+    position: relative;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
 body {
     margin: 0;
 }
