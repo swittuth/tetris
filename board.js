@@ -23,15 +23,14 @@ gameConsole.height = 500; // indicate row
 nextBlockConsole.width = 100;
 nextBlockConsole.height = 80;
 
-
+holdBlockConsole.width = 100;
+holdBlockConsole.height = 80;
 
 // the board will command when the blocks are randomly generated
 export class Game_Board {
     constructor() {
 
-
-
-        // for the next block canvas
+        // for the NEXT block canvas
         this.num_row_next = nextBlockConsole.height / block.MEASUREMENT;
         this.num_column_next = nextBlockConsole.width / block.MEASUREMENT;
 
@@ -42,6 +41,16 @@ export class Game_Board {
         this.generate_random_upcoming_block();
         this.initiate_next_block_array();
 
+        // for the HOLD block canvas
+        this.swapped = false;
+        this.num_row_hold = holdBlockConsole.height / block.MEASUREMENT;
+        this.num_column_hold = holdBlockConsole.width / block.MEASUREMENT;
+
+        this.hold_block_array;
+        this.hold_block;
+        this.hold_fill;
+        this.hold_stoke;
+        this.initiate_hold_block_array();
 
         this.score = 0;
         this.number_of_row = gameConsole.height / block.MEASUREMENT;
@@ -57,7 +66,6 @@ export class Game_Board {
         this.initiate_board_array();
 
         this.is_paused = false;
-        
     }
 
     // update landed block to block array
@@ -377,8 +385,6 @@ export class Game_Board {
                 }
             }
         }
-
-
     }
 
     register_next_block_to_canvas() {
@@ -425,8 +431,6 @@ export class Game_Board {
             this.next_block_array[2][3].status = 2;
             this.next_block_array[1][3].status = 2;
         }
-
-
     }
 
     display_next_canvas() {
@@ -452,6 +456,142 @@ export class Game_Board {
                 }
                 else{
                     nextBlockCtx.clearRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + + offset_y, block.MEASUREMENT, block.MEASUREMENT);
+                }
+            }
+        }
+    }
+
+    initiate_hold_block_array() {
+        this.hold_block_array = Array(this.num_row_hold);
+        
+        for (let i = 0; i < this.hold_block_array.length; i++){
+            this.hold_block_array[i] = Array(this.num_column_hold);
+        }
+
+        for (let row = 0; row < this.hold_block_array.length; row++){
+            for (let column = 0; column < this.hold_block_array[row].length; column++){
+                this.hold_block_array[row][column] = {
+                    status: 0,
+                    fill_color: "white",
+                    stroke_color: "white"
+                }
+            }
+        }
+    }
+
+    register_hold_block_to_canvas() {
+        // detect what is the next block and register it accordingly
+        if (this.hold_block.constructor.name === "S_Block"){
+            this.hold_block_array[2][1].status = 2;
+            this.hold_block_array[2][2].status = 2;
+            this.hold_block_array[1][2].status = 2;
+            this.hold_block_array[1][3].status = 2;
+        }
+        else if (this.hold_block.constructor.name === "T_Block"){
+            this.hold_block_array[2][1].status = 2;
+            this.hold_block_array[2][2].status = 2;
+            this.hold_block_array[2][3].status = 2;
+            this.hold_block_array[1][2].status = 2;
+        }
+        else if (this.hold_block.constructor.name === "Z_Block"){
+            this.hold_block_array[1][1].status = 2;
+            this.hold_block_array[1][2].status = 2;
+            this.hold_block_array[2][2].status = 2;
+            this.hold_block_array[2][3].status = 2;
+        }
+        else if (this.hold_block.constructor.name === "I_Block"){
+            this.hold_block_array[1][0].status = 2;
+            this.hold_block_array[1][1].status = 2;
+            this.hold_block_array[1][2].status = 2;
+            this.hold_block_array[1][3].status = 2;
+        }
+        else if (this.hold_block.constructor.name === "O_Block"){
+            this.hold_block_array[1][1].status = 2;
+            this.hold_block_array[1][2].status = 2;
+            this.hold_block_array[2][1].status = 2;
+            this.hold_block_array[2][2].status = 2;
+        }
+        else if (this.hold_block.constructor.name === "J_Block"){
+            this.hold_block_array[1][1].status = 2;
+            this.hold_block_array[2][1].status = 2;
+            this.hold_block_array[2][2].status = 2;
+            this.hold_block_array[2][3].status = 2;
+        }
+        else if (this.hold_block.constructor.name === "L_Block"){
+            this.hold_block_array[2][1].status = 2;
+            this.hold_block_array[2][2].status = 2;
+            this.hold_block_array[2][3].status = 2;
+            this.hold_block_array[1][3].status = 2;
+        }
+    }
+
+    swap() {
+        if (!this.swapped){
+            if (this.hold_block === undefined){
+                this.hold_block = this.current_block;
+                
+                this.update_current_block();
+            }
+            else {
+                const temp_block = this.hold_block;
+                this.hold_block = this.current_block;
+                this.current_block = temp_block.reset();
+                
+                this.current_fill = this.hold_block.fill_color;
+                this.current_stroke = this.hold_block.stroke_color;
+            }
+            
+            this.update_hold_block_canvas();
+            this.swapped = true;
+        }
+    }
+
+    update_hold_block_canvas() {
+        for (let row = 0; row < this.hold_block_array.length; row++){
+            for(let column = 0; column < this.hold_block_array[row].length; column++){
+                // if the area is not locked then use a different paint color to update the canvas
+                if (this.hold_block_array[row][column].status === 2){
+                    this.hold_block_array[row][column].status = 0;
+                }
+            }
+        }
+
+        for (let row = 0; row < this.hold_block_array.length; row++){
+            for(let column = 0; column < this.hold_block_array[row].length; column++){
+                // if the area is not locked then use a different paint color to update the canvas
+                if (this.hold_block_array[row][column].status !== 2){
+                    this.hold_block_array[row][column].fill_color = this.hold_block.fill_color;
+                    this.hold_block_array[row][column].stroke_color = this.hold_block.stroke_color;
+                }
+            }
+        }
+    }
+
+    display_hold_hold_canvas() {
+        if (this.hold_block !== undefined){
+            for (let index_y_position = 0; index_y_position < this.hold_block_array.length; index_y_position++){
+                for (let index_x_position = 0; index_x_position < this.hold_block_array[index_y_position].length; index_x_position++){
+    
+                    let offset_y = 0;
+                    let offset_x = 0;
+    
+                    if (this.hold_block.constructor.name === "I_Block"){
+                        offset_y += 10;
+                        offset_x += 10;
+                    }
+                    else if (this.hold_block.constructor.name === "O_Block"){
+                        offset_x += 10;
+                    }
+    
+                    if (this.hold_block_array[index_y_position][index_x_position].status === 2){
+                        holdBlockCtx.fillStyle = this.hold_block_array[index_y_position][index_x_position].fill_color;
+                        holdBlockCtx.strokeStyle = this.hold_block_array[index_y_position][index_x_position].stroke_color;
+                        holdBlockCtx.fillRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
+                        holdBlockCtx.strokeRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
+                    }
+                    else{
+                        holdBlockCtx.clearRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + + offset_y, block.MEASUREMENT, block.MEASUREMENT);
+                    }
                 }
             }
         }
@@ -488,6 +628,9 @@ document.addEventListener("keydown", (event => {
         else if (event.keyCode === 80){
             game_board.is_paused = !game_board.is_paused;
         }
+        else if (event.keyCode === 16){
+            game_board.swap();
+        }
 
     }
 }));
@@ -503,6 +646,10 @@ export function play_game(now = 0) {
     game_board.register_movement_board(); 
     game_board.register_next_block_to_canvas();
     const raf = requestAnimationFrame(play_game);
+
+    if (game_board.swapped){
+        game_board.register_hold_block_to_canvas();
+    }
 
     if (game_board.end_game){
         cancelAnimationFrame(raf);
@@ -520,6 +667,7 @@ export function play_game(now = 0) {
         game_board.check_for_clear_lines();
         game_board.generate_random_upcoming_block();
         game_board.register_next_block_to_canvas();
+        game_board.swapped = false;
     }
     else if (game_board.line_to_clear.length > 0){
         // include a function to animate block by changing the color of the block 
@@ -539,6 +687,7 @@ export function play_game(now = 0) {
         timer.elapsed = now - timer.start;
         game_board.display_board();
         game_board.display_next_canvas();
+        game_board.display_hold_hold_canvas();
         if (timer.elapsed > timer.level){
             timer.start = now;
             //timer.level = game_board.current_block.speed;

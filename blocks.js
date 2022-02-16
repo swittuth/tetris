@@ -170,6 +170,10 @@ class Block {
     is_near_bottom_border() {
         return this.block.some(sub_block => sub_block.check_near_bottom_border()) || this.near_bottom_border;
     }
+
+    reset() {
+        return new this.constructor();
+    }
 }
 
 export class O_Block extends Block{

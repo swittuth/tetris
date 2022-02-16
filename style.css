@@ -1,5 +1,8 @@
-h1 {
+html {
     font-family: 'Courier New', Courier, monospace;
+}
+
+h1 {
     text-align: center;
     font-size: 50px;
 }
@@ -20,15 +23,24 @@ canvas {
 
 #holdBlockContainer {
     position: absolute; 
-    left: 20%;
+    left: 32.5%;
 
 }
 
 #holdBlockConsole {
     position: relative;
-    margin: 0 auto; 
+    margin-top: 0;
     border: 2px solid grey;
     background-color: white;
+}
+
+#hold {
+    position: relative;
+    margin: 0 auto;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 15px;
+    font-weight: bolder;
 }
 
 #gameContainer {
