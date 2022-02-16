@@ -18,6 +18,19 @@ canvas {
     display: inline-block;
 }
 
+#holdBlockContainer {
+    position: absolute; 
+    left: 20%;
+
+}
+
+#holdBlockConsole {
+    position: relative;
+    margin: 0 auto; 
+    border: 2px solid grey;
+    background-color: white;
+}
+
 #gameContainer {
     position: absolute;
     left: 0;

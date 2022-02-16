@@ -4,6 +4,9 @@ export const gameCtx = gameConsole.getContext('2d');
 const nextBlockConsole = document.getElementById("nextBlockConsole");
 const nextBlockCtx = nextBlockConsole.getContext('2d');
 
+const holdBlockConsole = document.getElementById("holdBlockConsole");
+const holdBlockCtx = holdBlockConsole.getContext('2d');
+
 const scoreElement = document.getElementById("score");
 let gameStatus = document.getElementById("gameStatus");
 gameStatus.style.display = "none";
@@ -20,9 +23,13 @@ gameConsole.height = 500; // indicate row
 nextBlockConsole.width = 100;
 nextBlockConsole.height = 80;
 
+
+
 // the board will command when the blocks are randomly generated
 export class Game_Board {
     constructor() {
+
+
 
         // for the next block canvas
         this.num_row_next = nextBlockConsole.height / block.MEASUREMENT;
