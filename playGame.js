@@ -1,5 +1,8 @@
 import * as game_board from "./board.js";
 
-//const board_game = new game_board.Game_Board();
+const start_button = document.getElementById("start-restart");
 
-game_board.play_game();
+start_button.addEventListener("click", () => {
+    game_board.play_game();
+    start_button.innerHTML = "RESTART";
+});

@@ -598,9 +598,6 @@ export class Game_Board {
     }
 }
 
-
-const game_board = new Game_Board()
-
 document.addEventListener("keydown", (event => {
     if (!game_board.current_block.is_landed()){
         event.preventDefault();
@@ -639,60 +636,71 @@ document.addEventListener("keydown", (event => {
 const timer = {
     start: 0,
     elapsed: 0, 
-    level: game_board.current_block.speed
+    level: 1000,
 }
 
 export function play_game(now = 0) {
-    game_board.register_movement_board(); 
-    game_board.register_next_block_to_canvas();
-    const raf = requestAnimationFrame(play_game);
+    let game_board = new Game_Board()
 
-    if (game_board.swapped){
-        game_board.register_hold_block_to_canvas();
-    }
-
-    if (game_board.end_game){
-        cancelAnimationFrame(raf);
-        window.alert("Game Over");
-    }
-    else if (game_board.is_paused){
-        gameStatus.style.display = "block";
-        // do nothing 
-    }
-    else if (game_board.current_block.is_landed()){
-
-        timer.elapsed = now - timer.start;
-        game_board.register_block_to_board();
-        game_board.update_current_block();
-        game_board.check_for_clear_lines();
-        game_board.generate_random_upcoming_block();
+    function animate() {
+        game_board.register_movement_board(); 
         game_board.register_next_block_to_canvas();
-        game_board.swapped = false;
-    }
-    else if (game_board.line_to_clear.length > 0){
-        // include a function to animate block by changing the color of the block 
-        game_board.animate_line(game_board.line_to_clear);
+        let raf = requestAnimationFrame(animate);
 
-        game_board.display_next_canvas();
-        game_board.display_board();
+        if (game_board.swapped){
+            game_board.register_hold_block_to_canvas();
+        }
 
-        timer.elapsed = now - timer.start;
-        
-        if (timer.elapsed > 500){
-            game_board.clear_lines(game_board.line_to_clear)
-        };
-    }
-    else{
-        gameStatus.style.display = "none";
-        timer.elapsed = now - timer.start;
-        game_board.display_board();
-        game_board.display_next_canvas();
-        game_board.display_hold_hold_canvas();
-        if (timer.elapsed > timer.level){
-            timer.start = now;
-            //timer.level = game_board.current_block.speed;
-            game_board.register_movement_board(); 
-            game_board.current_block.move_down_one_row();
+        if (game_board.end_game){
+            cancelAnimationFrame(raf);
+            window.alert("Game Over");
+            const answer = window.prompt("restart?");
+            console.log(answer);
+            if (answer === "yes"){
+                game_board = new Game_Board();
+                play_game();
+            }
+        }
+        else if (game_board.is_paused){
+            gameStatus.style.display = "block";
+            // do nothing 
+        }
+        else if (game_board.current_block.is_landed()){
+
+            timer.elapsed = now - timer.start;
+            game_board.register_block_to_board();
+            game_board.update_current_block();
+            game_board.check_for_clear_lines();
+            game_board.generate_random_upcoming_block();
+            game_board.register_next_block_to_canvas();
+            game_board.swapped = false;
+        }
+        else if (game_board.line_to_clear.length > 0){
+            // include a function to animate block by changing the color of the block 
+            game_board.animate_line(game_board.line_to_clear);
+
+            game_board.display_next_canvas();
+            game_board.display_board();
+
+            timer.elapsed = now - timer.start;
+            
+            if (timer.elapsed > 500){
+                game_board.clear_lines(game_board.line_to_clear)
+            };
+        }
+        else{
+            gameStatus.style.display = "none";
+            timer.elapsed = now - timer.start;
+            game_board.display_board();
+            game_board.display_next_canvas();
+            game_board.display_hold_hold_canvas();
+            if (timer.elapsed > timer.level){
+                timer.start = now;
+                game_board.register_movement_board(); 
+                game_board.current_block.move_down_one_row();
+            }
         }
     }
+
+    animate();
 }

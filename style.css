@@ -7,6 +7,14 @@ h1 {
     font-size: 50px;
 }
 
+#start-restart {
+    position: relative;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    margin-left: 48%;
+    margin-bottom: 20px;
+}
+
 #gameStatus {
     position: relative;
     font-family: 'Courier New', Courier, monospace;
