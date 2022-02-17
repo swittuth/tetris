@@ -11,6 +11,8 @@ const scoreElement = document.getElementById("score");
 let gameStatus = document.getElementById("gameStatus");
 gameStatus.style.display = "none";
 
+const title = document.getElementById("title");
+
 const ONE_LINE_POINT = 150;
 const TWO_LINE_POINT = 370;
 const THREE_LINE_POINT = 780;
@@ -598,75 +600,72 @@ export class Game_Board {
     }
 }
 
-document.addEventListener("keydown", (event => {
-    if (!game_board.current_block.is_landed()){
-        event.preventDefault();
 
-        if (event.keyCode === 37 || event.keyCode === 65){
-            if (game_board.valid_turn()){
-                game_board.current_block.move_left(); 
-            }
-        }
-        else if (event.keyCode === 39 || event.keyCode === 68){
-            if (game_board.valid_turn()){
-                game_board.current_block.move_right();
-            }
-        }
-        else if (event.keyCode === 40 || event.keyCode === 83){
-            game_board.current_block.increase_speed();
-            game_board.score += 5;
-        }
-        else if (event.keyCode === 38 || event.keyCode === 87){
-            game_board.current_block.rotate();
-        }
-        else if (event.keyCode === 32){
-            game_board.drop_block();
-        }
-        else if (event.keyCode === 80){
-            game_board.is_paused = !game_board.is_paused;
-        }
-        else if (event.keyCode === 16){
-            game_board.swap();
-        }
 
+
+export function initiate_game() {
+    let game_board = new Game_Board();
+
+    document.addEventListener("keydown", (event => {
+        if (!game_board.current_block.is_landed()){
+            event.preventDefault();
+    
+            if (event.keyCode === 37 || event.keyCode === 65){
+                if (game_board.valid_turn()){
+                    game_board.current_block.move_left(); 
+                }
+            }
+            else if (event.keyCode === 39 || event.keyCode === 68){
+                if (game_board.valid_turn()){
+                    game_board.current_block.move_right();
+                }
+            }
+            else if (event.keyCode === 40 || event.keyCode === 83){
+                game_board.current_block.increase_speed();
+                game_board.score += 5;
+            }
+            else if (event.keyCode === 38 || event.keyCode === 87){
+                game_board.current_block.rotate();
+            }
+            else if (event.keyCode === 32){
+                game_board.drop_block();
+            }
+            else if (event.keyCode === 80){
+                game_board.is_paused = !game_board.is_paused;
+            }
+            else if (event.keyCode === 16){
+                game_board.swap();
+            }
+    
+        }
+    }));
+
+    const timer = {
+        start: 0,
+        elapsed: 0, 
+        level: game_board.current_block.speed,
     }
-}));
-
-
-const timer = {
-    start: 0,
-    elapsed: 0, 
-    level: 1000,
-}
-
-export function play_game(now = 0) {
-    let game_board = new Game_Board()
-
-    function animate() {
+    play_game();
+    function play_game(now = 0) {
+        title.innerHTML = "TETRIS";
+        let raf = requestAnimationFrame(play_game);
         game_board.register_movement_board(); 
         game_board.register_next_block_to_canvas();
-        let raf = requestAnimationFrame(animate);
-
+    
         if (game_board.swapped){
             game_board.register_hold_block_to_canvas();
         }
-
+    
         if (game_board.end_game){
             cancelAnimationFrame(raf);
-            window.alert("Game Over");
-            const answer = window.prompt("restart?");
-            console.log(answer);
-            if (answer === "yes"){
-                game_board = new Game_Board();
-                play_game();
-            }
+            title.innerHTML = "GAME OVER";
         }
         else if (game_board.is_paused){
             gameStatus.style.display = "block";
             // do nothing 
         }
         else if (game_board.current_block.is_landed()){
-
+    
             timer.elapsed = now - timer.start;
             game_board.register_block_to_board();
             game_board.update_current_block();
@@ -678,10 +677,10 @@ export function play_game(now = 0) {
         else if (game_board.line_to_clear.length > 0){
             // include a function to animate block by changing the color of the block 
             game_board.animate_line(game_board.line_to_clear);
-
+    
             game_board.display_next_canvas();
             game_board.display_board();
-
+    
             timer.elapsed = now - timer.start;
             
             if (timer.elapsed > 500){
@@ -700,7 +699,6 @@ export function play_game(now = 0) {
                 game_board.current_block.move_down_one_row();
             }
         }
+    
     }
-
-    animate();
 }
