@@ -525,6 +525,7 @@ export class Game_Board {
             this.hold_block_array[2][3].status = 2;
             this.hold_block_array[1][3].status = 2;
         }
+        
     }
 
     swap() {
@@ -569,7 +570,7 @@ export class Game_Board {
         }
     }
 
-    display_hold_hold_canvas() {
+    display_hold_block_canvas() {
         if (this.hold_block !== undefined){
             for (let index_y_position = 0; index_y_position < this.hold_block_array.length; index_y_position++){
                 for (let index_x_position = 0; index_x_position < this.hold_block_array[index_y_position].length; index_x_position++){
@@ -692,7 +693,7 @@ export function initiate_game() {
             timer.elapsed = now - timer.start;
             game_board.display_board();
             game_board.display_next_canvas();
-            game_board.display_hold_hold_canvas();
+            game_board.display_hold_block_canvas();
             if (timer.elapsed > timer.level){
                 timer.start = now;
                 game_board.register_movement_board(); 
