@@ -457,7 +457,7 @@ export class Game_Board {
                     nextBlockCtx.strokeRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
                 }
                 else{
-                    nextBlockCtx.clearRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + + offset_y, block.MEASUREMENT, block.MEASUREMENT);
+                    nextBlockCtx.clearRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
                 }
             }
         }
@@ -550,24 +550,30 @@ export class Game_Board {
     }
 
     update_hold_block_canvas() {
-        for (let row = 0; row < this.hold_block_array.length; row++){
-            for(let column = 0; column < this.hold_block_array[row].length; column++){
-                // if the area is not locked then use a different paint color to update the canvas
-                if (this.hold_block_array[row][column].status === 2){
-                    this.hold_block_array[row][column].status = 0;
+        try{
+            for (let row = 0; row < this.hold_block_array.length; row++){
+                for(let column = 0; column < this.hold_block_array[row].length; column++){
+                    // if the area is not locked then use a different paint color to update the canvas
+                    if (this.hold_block_array[row][column].status === 2){
+                        this.hold_block_array[row][column].status = 0;
+                    }
+                }
+            }
+    
+            for (let row = 0; row < this.hold_block_array.length; row++){
+                for(let column = 0; column < this.hold_block_array[row].length; column++){
+                    // if the area is not locked then use a different paint color to update the canvas
+                    if (this.hold_block_array[row][column].status !== 2){
+                        this.hold_block_array[row][column].fill_color = this.hold_block.fill_color;
+                        this.hold_block_array[row][column].stroke_color = this.hold_block.stroke_color;
+                    }
                 }
             }
         }
-
-        for (let row = 0; row < this.hold_block_array.length; row++){
-            for(let column = 0; column < this.hold_block_array[row].length; column++){
-                // if the area is not locked then use a different paint color to update the canvas
-                if (this.hold_block_array[row][column].status !== 2){
-                    this.hold_block_array[row][column].fill_color = this.hold_block.fill_color;
-                    this.hold_block_array[row][column].stroke_color = this.hold_block.stroke_color;
-                }
-            }
+        catch (e){
+            return;
         }
+        
     }
 
     display_hold_block_canvas() {
@@ -593,7 +599,7 @@ export class Game_Board {
                         holdBlockCtx.strokeRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
                     }
                     else{
-                        holdBlockCtx.clearRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + + offset_y, block.MEASUREMENT, block.MEASUREMENT);
+                        holdBlockCtx.clearRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
                     }
                 }
             }
@@ -601,11 +607,9 @@ export class Game_Board {
     }
 }
 
-
-
-
 export function initiate_game() {
     let game_board = new Game_Board();
+    game_board.update_hold_block_canvas();
 
     document.addEventListener("keydown", (event => {
         if (!game_board.current_block.is_landed()){
@@ -652,6 +656,7 @@ export function initiate_game() {
         let raf = requestAnimationFrame(play_game);
         game_board.register_movement_board(); 
         game_board.register_next_block_to_canvas();
+        game_board.display_hold_block_canvas();
     
         if (game_board.swapped){
             game_board.register_hold_block_to_canvas();
@@ -700,6 +705,5 @@ export function initiate_game() {
                 game_board.current_block.move_down_one_row();
             }
         }
-    
     }
 }
