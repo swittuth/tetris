@@ -52,6 +52,7 @@ export class Game_Board {
         this.hold_block;
         this.hold_fill;
         this.hold_stoke;
+        this.update_hold_block_canvas();
         this.initiate_hold_block_array();
 
         this.score = 0;
@@ -479,6 +480,7 @@ export class Game_Board {
                 }
             }
         }
+
     }
 
     register_hold_block_to_canvas() {
@@ -577,13 +579,13 @@ export class Game_Board {
     }
 
     display_hold_block_canvas() {
-        if (this.hold_block !== undefined){
-            for (let index_y_position = 0; index_y_position < this.hold_block_array.length; index_y_position++){
-                for (let index_x_position = 0; index_x_position < this.hold_block_array[index_y_position].length; index_x_position++){
-    
-                    let offset_y = 0;
-                    let offset_x = 0;
-    
+        for (let index_y_position = 0; index_y_position < this.hold_block_array.length; index_y_position++){
+            for (let index_x_position = 0; index_x_position < this.hold_block_array[index_y_position].length; index_x_position++){
+
+                let offset_y = 0;
+                let offset_x = 0;
+
+                try {
                     if (this.hold_block.constructor.name === "I_Block"){
                         offset_y += 10;
                         offset_x += 10;
@@ -591,16 +593,19 @@ export class Game_Board {
                     else if (this.hold_block.constructor.name === "O_Block"){
                         offset_x += 10;
                     }
-    
-                    if (this.hold_block_array[index_y_position][index_x_position].status === 2){
-                        holdBlockCtx.fillStyle = this.hold_block_array[index_y_position][index_x_position].fill_color;
-                        holdBlockCtx.strokeStyle = this.hold_block_array[index_y_position][index_x_position].stroke_color;
-                        holdBlockCtx.fillRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
-                        holdBlockCtx.strokeRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
-                    }
-                    else{
-                        holdBlockCtx.clearRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
-                    }
+                }
+                catch (e){
+                     
+                }
+
+                if (this.hold_block_array[index_y_position][index_x_position].status === 2){
+                    holdBlockCtx.fillStyle = this.hold_block_array[index_y_position][index_x_position].fill_color;
+                    holdBlockCtx.strokeStyle = this.hold_block_array[index_y_position][index_x_position].stroke_color;
+                    holdBlockCtx.fillRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
+                    holdBlockCtx.strokeRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
+                }
+                else{
+                    holdBlockCtx.clearRect(index_x_position * block.MEASUREMENT + offset_x, index_y_position * block.MEASUREMENT + offset_y, block.MEASUREMENT, block.MEASUREMENT);
                 }
             }
         }
@@ -609,7 +614,6 @@ export class Game_Board {
 
 export function initiate_game() {
     let game_board = new Game_Board();
-    game_board.update_hold_block_canvas();
 
     document.addEventListener("keydown", (event => {
         if (!game_board.current_block.is_landed()){

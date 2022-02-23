@@ -74,7 +74,6 @@ class Block {
         this.start_x = randomize_starting_position();
         this.start_y = -20;
         this.horizontal = true;
-        this.moved = true;
         this.speed = DEAFAULT_SPEED;
         this.fill_color = fill_color;
         this.stroke_color = stroke_color;
@@ -116,7 +115,6 @@ class Block {
             this.second_block.x_position -= MEASUREMENT;
             this.third_block.x_position -= MEASUREMENT;
             this.fourth_block.x_position -= MEASUREMENT;
-            this.moved = true;
         }
     }
 
@@ -127,20 +125,14 @@ class Block {
             this.second_block.x_position += MEASUREMENT;
             this.third_block.x_position += MEASUREMENT;
             this.fourth_block.x_position += MEASUREMENT;
-            this.moved = true;
         }
     }
 
     is_landed() {
         if (this.block.some(sub_block => sub_block.check_landed() || this.landed)){
-            this.moved = false;
             return true;
         }
         return false;
-    }
-
-    is_fully_landed() {
-        return this.block.some(sub_block => sub_block.check_landed) && !this.moved;
     }
 
     increase_speed() {
@@ -280,7 +272,6 @@ export class T_Block extends Block {
         }
  
         this.horizontal = !this.horizontal;
-        this.moved = true;
  
     }
 }
@@ -377,7 +368,6 @@ export class I_Block extends Block{
        }
 
         this.horizontal = !this.horizontal;
-        this.moved = true;
 
     }
 }
@@ -428,7 +418,6 @@ export class Z_Block extends Block {
         }
 
         this.horizontal = !this.horizontal;
-        this.moved = true;
  
     }
     
@@ -487,7 +476,6 @@ export class S_Block extends Block {
             }   
         }
         this.horizontal = !this.horizontal;
-        this.moved = true;
     }
 
 }
@@ -582,9 +570,7 @@ export class L_Block extends Block {
             }
         }
 
-        //this.render_on_screen();
         this.horizontal = !this.horizontal;
-        this.moved = true;
     }
 }
 
@@ -682,10 +668,6 @@ export class J_Block extends Block {
                 this.facing_up = true;
             }
         }
-
-
-        //this.render_on_screen();
-        this.moved = true;
         this.horizontal = !this.horizontal;
     }
 }
