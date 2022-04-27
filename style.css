@@ -11,8 +11,9 @@ body {
     grid-template-areas: 
         "title"
         "buttons"
+        "score"
         "game-area";
-    grid-template-rows: 1fr 1fr 6fr;
+    grid-template-rows: 1fr 1fr 1fr 6fr;
     padding: 0px;
     margin: 0px;
     justify-content: center;
@@ -20,12 +21,20 @@ body {
     align-content: center;
     width: 100%;
     height: 100%;
+    gap: 0px;
 }
 
 #title {
     font-size: 50px;
+    margin: 0px;
     grid-area: title;
     text-align: center;
+}
+
+#score {
+    grid-area: score;
+    margin: 0px;
+    padding: 0px;
 }
 
 #bt-control-section {
@@ -44,52 +53,35 @@ main {
     gap: 10px;
 }
 
-#start-restart {
-    font-family: inherit;
-    text-align: center;
-    border: 1px solid black;
-    font-weight: bold;
-    background-color: lightgrey;
+button {
     cursor: pointer;
-}
-
-#instruction-button {
     font-family: inherit;
     text-align: center;
     border: 1px solid black;
     font-weight: bold;
     background-color: lightgrey;
-    cursor:pointer
+    transition-duration: 0.2s;
 }
 
-#start-restart:hover {
+button:hover {
     background-color: coral;
     color: white;
 }
 
-#instruction-button:hover {
-    background-color: coral;
-    color: white;
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: bold;
 }
-
-#gameStatus {
-    font-family: 'Courier New', Courier, monospace;
-    text-align: center;
-}
-
-body {
-    margin: 0;
-}
-
 
 #holdBlockConsole {
-    margin-top: 0;
     border: 2px solid grey;
     background-color: white;
 }
 
 #hold {
-    margin: 0 auto;
     text-align: center;
     font-family: 'Courier New', Courier, monospace;
     font-size: 15px;
@@ -110,13 +102,7 @@ body {
     background-color: white;
 }
 
-#infoContainer {
-    right: 32.5%;
-
-}
-
 #nextBlockConsole {
-    margin: 0 auto;
     border: 2px solid grey;
     background-color: white;
 }

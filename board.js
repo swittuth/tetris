@@ -215,7 +215,7 @@ export class Game_Board {
     }
 
     display_board() {
-        scoreElement.innerHTML = `Score: ${this.score}`;
+        scoreElement.innerHTML = `SCORE: ${this.score}`;
         for (let index_y_position = 0; index_y_position < this.board_array.length; index_y_position++){
             for (let index_x_position = 0; index_x_position < this.board_array[index_y_position].length; index_x_position++){
                 if (this.board_array[index_y_position][index_x_position].status === 2 || this.board_array[index_y_position][index_x_position].status === 1){
@@ -669,7 +669,7 @@ export function initiate_game() {
             title.innerHTML = "GAME OVER";
         }
         else if (game_board.is_paused){
-            title.innerHTML = "Game Paused";
+            title.innerHTML = "GAME PAUSED";
             // do nothing 
         }
         else if (game_board.current_block.is_landed()){
