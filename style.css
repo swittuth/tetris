@@ -1,22 +1,51 @@
 html {
     font-family: 'Courier New', Courier, monospace;
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    display: grid;
+    grid-template-areas: 
+        "title"
+        "buttons"
+        "game-area";
+    grid-template-rows: 1fr 1fr 6fr;
+    padding: 0px;
+    margin: 0px;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 #title {
-    text-align: center;
     font-size: 50px;
+    grid-area: title;
+    text-align: center;
 }
 
-button {
-    display: inline-block;
+#bt-control-section {
+    grid-area: buttons;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+}
+
+main {
+    grid-area: game-area;
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
 }
 
 #start-restart {
-    position: relative;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: inherit;
     text-align: center;
-    margin-left: 45%;
-    margin-bottom: 20px;
     border: 1px solid black;
     font-weight: bold;
     background-color: lightgrey;
@@ -24,10 +53,8 @@ button {
 }
 
 #instruction-button {
-    position: relative;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: inherit;
     text-align: center;
-    margin-bottom: 20px;
     border: 1px solid black;
     font-weight: bold;
     background-color: lightgrey;
@@ -45,7 +72,6 @@ button {
 }
 
 #gameStatus {
-    position: relative;
     font-family: 'Courier New', Courier, monospace;
     text-align: center;
 }
@@ -54,25 +80,14 @@ body {
     margin: 0;
 }
 
-canvas {
-    display: inline-block;
-}
-
-#holdBlockContainer {
-    position: absolute; 
-    left: 32.5%;
-
-}
 
 #holdBlockConsole {
-    position: relative;
     margin-top: 0;
     border: 2px solid grey;
     background-color: white;
 }
 
 #hold {
-    position: relative;
     margin: 0 auto;
     text-align: center;
     font-family: 'Courier New', Courier, monospace;
@@ -81,7 +96,6 @@ canvas {
 }
 
 #gameContainer {
-    position: absolute;
     left: 0;
     right: 0;
     margin-left: auto;
@@ -89,7 +103,6 @@ canvas {
 }
 
 #gameConsole {
-    position: relative;
     margin: 0 auto;
     display: block;
     border: 2px solid grey;
@@ -97,20 +110,17 @@ canvas {
 }
 
 #infoContainer {
-    position: absolute;
     right: 32.5%;
 
 }
 
 #nextBlockConsole {
-    position: relative;
     margin: 0 auto;
     border: 2px solid grey;
     background-color: white;
 }
 
 #score {
-    position: relative;
     margin: 0 auto;
     font-family: 'Courier New', Courier, monospace;
     font-size: 15px;

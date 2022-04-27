@@ -1,43 +1,47 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Tetris Game</title>
+        <title>Tetris Limited</title>
         <link rel = "stylesheet" href = "style.css">
     </head>
     
     <body>
-        <h1 id = "title">TETRIS</h1>
+        <h1 id = "title">TETRIS LIMITED</h1>
 
-        <button id = "start-restart">START</button>
-        <button id = "instruction-button">INSTRUCTIONS</button>
-        
-        
+        <section id="bt-control-section">
+            <button id = "start-restart">START</button>
+            <button id = "instruction-button">INSTRUCTIONS</button>
+        </section>
+
         <p id = "gameStatus">Game Paused</p>
-
-        <div id = holdBlockContainer>
-            <p id = "hold">Hold</p>
-
-            <canvas id = "holdBlockConsole">
-                
-            </canvas>
-
-        </div>
         
-        <div id = gameContainer>
+        <main>
             
-            <canvas id = 'gameConsole'>
-    
-            </canvas>
+            <div id = holdBlockContainer>
+                <p id = "hold">Hold</p>
 
-        </div>
+                <canvas id = "holdBlockConsole">
+                    
+                </canvas>
 
-        <div id = "infoContainer">
-            <p id = "score">Score: </p>
+            </div>
+            
+            <div id = gameContainer>
+                
+                <canvas id = 'gameConsole'>
+        
+                </canvas>
 
-            <canvas id = 'nextBlockConsole'>
-    
-            </canvas>
-        </div>
+            </div>
+
+            <div id = "infoContainer">
+                <p id = "score">Score: </p>
+
+                <canvas id = 'nextBlockConsole'>
+        
+                </canvas>
+            </div>
+        </main>
 
         <script src = "board.js" type = "module"></script>
         <script src = "blocks.js" type = "module"></script>
